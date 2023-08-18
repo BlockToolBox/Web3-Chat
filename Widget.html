@@ -1,0 +1,189 @@
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <title>You the Dev!</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@metamask/onboarding@1.0.1/dist/metamask-onboarding.bundle.js"></script>
+      <style>
+
+  body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+      }
+
+      body.light-mode {
+              background: linear-gradient(to bottom, rgb(147, 194, 205), rgb(30, 58, 65)) ;
+          }
+          
+          body.dark-mode {
+              background: linear-gradient(to bottom, #32013f, #021033);
+          }
+
+      .dark-mode {
+          background: linear-gradient(to bottom, #610c76, #041338);
+      }
+
+      .dark-mode h1,
+          .dark-mode label {
+          color: white;
+      }
+
+      .toggle-button {
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background-color: transparent;
+              border: none;
+              outline: none;
+              cursor: pointer;
+          }
+
+      .toggle-button img {
+      width: 40px; 
+      height: 40px; 
+  }
+
+          .input-container input[type="text"] {
+          width: 70%; 
+          padding: 5px; 
+          font-size: 16px; 
+          margin-bottom: 15px;
+          border-radius: 4px;
+          border: none;
+          }
+
+          .input-container label {
+              margin-bottom: 8px;
+              font-size: 20px
+          }
+
+          .submit-button {
+      
+      background-color: navy;
+      color: white;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      transition: background-color 0.3s;
+      cursor: pointer;
+      width: 75%;
+
+  }
+
+  .light-mode .submit-button {
+    background-image: linear-gradient(to right, #000000, #092c7d);
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.light-mode .submit-button:hover {
+    background-image:  linear-gradient(to right, rgb(114, 196, 219), rgb(68, 130, 146)) ;
+}
+
+.dark-mode .submit-button {
+    background-image: linear-gradient(to right, rgb(114, 196, 219), rgb(68, 130, 146)) ;
+    color: white;
+    border: 1px solid white;
+}
+
+.dark-mode .submit-button:hover {
+    background-image: linear-gradient(to bottom, #610c76, #041338);
+}
+
+  .content {
+              text-align: center;
+          }
+
+          .switch {
+      width: 250px; 
+      height: 250px; 
+  }
+
+      </style>
+  
+  </head>
+  <body class="dark-mode">
+      <div class="content" style="margin-top: 20px;">
+      <img class="switch" src="https://cdn.icon-icons.com/icons2/2063/PNG/512/conversation_chat_deal_agreement_icon_124665.png" alt="Switch">
+      <button class="toggle-button" onclick="toggleTheme()">
+          <img src="https://cdn.icon-icons.com/icons2/1310/PNG/512/lamp_86334.png" alt="Toggle Theme" width="24" height="24">
+      </button>
+
+      <div class="input-container">
+      <label for="message"></label>
+      <input type="text" id="message" placeholder="Enter your message">
+      </div>
+
+      <div class="input-container">
+      <label for="recipient"></label>
+      <input type="text" id="recipient" placeholder="Enter recipient address">
+      </div>
+      
+      <button class="submit-button" onclick="sendTransaction()">CHAT</button>
+      </div>
+      <script>
+          
+  async function sendTransaction() {
+    const web3 = new Web3(window.ethereum);
+    const recipient = document.getElementById('recipient').value;
+    const messageInput = document.getElementById('message');
+    const message = messageInput.value;
+    const signature = ' -- I am a Dev';
+    const combinedMessage = message + signature;
+    const hexData = web3.utils.asciiToHex(combinedMessage);
+
+    try {
+      const accounts = await ethereum.request({ method: 'eth_accounts' });
+
+      // Check if a wallet is connected
+      if (accounts.length === 0) {
+        await ethereum.request({ method: 'eth_requestAccounts' });
+      }
+
+      const address = accounts[0];
+
+      const transactionParameters = {
+        from: address,
+        to: recipient,
+        value: web3.utils.toWei('0.0000001', 'ether'),
+        data: hexData,
+      };
+
+      const result = await ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [transactionParameters],
+      });
+
+      console.log('Transaction sent:', result);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+      </script>
+      <script>
+          function toggleTheme() {
+      const body = document.querySelector('body');
+              
+      if (body.classList.contains('dark-mode')) {
+          body.classList.remove('dark-mode');
+          body.classList.add('light-mode');
+          
+          document.querySelector('.toggle-button img').src = "https://cdn.icon-icons.com/icons2/1310/PNG/512/lamp_86334.png";
+      } else {
+          body.classList.remove('light-mode');
+          body.classList.add('dark-mode');       
+          document.querySelector('.toggle-button img').src = "https://cdn.icon-icons.com/icons2/1310/PNG/512/lamp_86334.png";
+      }
+  }
+      </script>
+  </body>
+  </html>
